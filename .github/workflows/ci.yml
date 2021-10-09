@@ -16,7 +16,9 @@ jobs:
         run: chmod +x /usr/local/bin/merge2pdf
       - name: Run tests
         run: XDEBUG_MODE=coverage vendor/bin/phpunit
-      - name: Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload coverage results to Coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          composer global require php-coveralls/php-coveralls
+          php-coveralls --coverage_clover=clover.xml -v
