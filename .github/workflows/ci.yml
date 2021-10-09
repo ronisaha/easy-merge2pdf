@@ -16,6 +16,7 @@ jobs:
         run: chmod +x /usr/local/bin/merge2pdf
       - name: Run tests
         run: XDEBUG_MODE=coverage vendor/bin/phpunit
-      - name: phpunit-coverage-badge
-        uses: timkrase/phpunit-coverage-badge@v1.2.0
-
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
