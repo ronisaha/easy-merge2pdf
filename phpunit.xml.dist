@@ -1,0 +1,15 @@
+<phpunit bootstrap="vendor/autoload.php">
+  <testsuites>
+    <testsuite name="EasyMerge2pdf">
+      <directory>tests</directory>
+    </testsuite>
+  </testsuites>
+  <coverage cacheDirectory=".phpunit.cache/code-coverage" processUncoveredFiles="true">
+    <include>
+      <directory suffix=".php">src</directory>
+    </include>
+    <report>
+      <clover outputFile="clover.xml" />
+    </report>
+  </coverage>
+</phpunit>

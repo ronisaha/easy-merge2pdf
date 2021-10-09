@@ -1,0 +1,30 @@
+{
+    "name": "ronisaha/easy-merge2pdf",
+    "description": "Easy to use PHP library for merging Images and PDFs. Wrapper for ajaxray/merge2pdf",
+    "type": "library",
+    "require": {
+        "php" : ">=7.4",
+        "symfony/process": "^5.0",
+        "symfony/options-resolver": "^5.0",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "friendsofphp/php-cs-fixer": "^3.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "EasyMerge2pdf\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "EasyMerge2pdfTests\\": "tests/" }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Roni Saha",
+            "email": "roni.cse@gmail.com"
+        }
+    ]
+}
