@@ -20,5 +20,6 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          composer global require php-coveralls/php-coveralls
+          curl -L https://github.com/php-coveralls/php-coveralls/releases/download/v2.4.3/php-coveralls.phar -o php-coveralls
+          chmod +x php-coveralls
           php-coveralls --coverage_clover=clover.xml -v
