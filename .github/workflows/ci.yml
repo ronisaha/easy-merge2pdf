@@ -15,7 +15,7 @@ jobs:
       - name: Give Executable permission
         run: chmod +x /usr/local/bin/merge2pdf
       - name: Run tests
-        run: vendor/bin/phpunit
+        run: XDEBUG_MODE=coverage vendor/bin/phpunit
       - name: phpunit-coverage-badge
         uses: timkrase/phpunit-coverage-badge@v1.2.0
 
