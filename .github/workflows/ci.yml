@@ -10,16 +10,17 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: composer install
-      - name: Install merge2pdf
-        run: curl -L https://github.com/ajaxray/merge2pdf/releases/download/v1.1.0/merge2pdf_linux-amd64.OS -o /usr/local/bin/merge2pdf
-      - name: Give Executable permission
-        run: chmod +x /usr/local/bin/merge2pdf
+      - name: Install dependencies
+        run: |
+          curl -L https://github.com/ajaxray/merge2pdf/releases/download/v1.1.0/merge2pdf_linux-amd64.OS -o /usr/local/bin/merge2pdf
+          chmod +x /usr/local/bin/merge2pdf
+          curl -L https://github.com/php-coveralls/php-coveralls/releases/download/v2.4.3/php-coveralls.phar -o /usr/local/bin/php-coveralls
+          chmod +x /usr/local/bin/php-coveralls
+          mkdir -p build/logs
       - name: Run tests
         run: XDEBUG_MODE=coverage vendor/bin/phpunit
       - name: Upload coverage results to Coveralls
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          curl -L https://github.com/php-coveralls/php-coveralls/releases/download/v2.4.3/php-coveralls.phar -o /usr/local/bin/php-coveralls
-          chmod +x /usr/local/bin/php-coveralls
-          php-coveralls --coverage_clover=clover.xml -v
+          php-coveralls --coverage_clover=build/logs/clover.xml -v
