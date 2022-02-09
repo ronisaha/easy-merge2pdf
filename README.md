@@ -17,9 +17,11 @@ composer require ronisaha/easy-merge2pdf
 require_once 'vendor/autoload.php';
 
 $m = new \EasyMerge2pdf\Merger(['auto' => true]);
-$m->addInput('input.pdf', '1,3-8,2,1');
+or 
+$m = new \EasyMerge2pdf\Merger(['binary' => '/path/to/merge2pdf']);
+$m->addInput('/path/to/input.pdf', '1,3-8,2,1');
 try {
-    $m->merge('out.pdf');
+    $m->merge('/path/to/out.pdf');
 } catch (Exception $exception) {
     echo $exception->getMessage();
 }
