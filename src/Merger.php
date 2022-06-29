@@ -116,7 +116,7 @@ class Merger
             return $value >= self::MIN_QUALITY && $value <= self::MAX_QUALITY;
         });
 
-        $resolver->define('margin');
+        $resolver->setDefined('margin');
 
         $resolver->setDefault('margin', function (OptionsResolver $marginResolver) {
             $marginResolver->setDefaults([
