@@ -3,9 +3,9 @@
     "description": "Easy to use PHP library for merging Images and PDFs. Wrapper for ajaxray/merge2pdf",
     "type": "library",
     "require": {
-        "php" : ">=7.4",
-        "symfony/process": "^5.0",
-        "symfony/options-resolver": "^5.0",
+        "php" : "^7.4|^8.0",
+        "symfony/process": "^4.4|^5.4",
+        "symfony/options-resolver": "^4.4|^5.4",
         "ext-json": "*"
     },
     "require-dev": {
