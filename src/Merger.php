@@ -10,8 +10,8 @@ use Symfony\Component\Process\Process;
 
 class Merger
 {
-    const MIN_QUALITY = 0;
-    const MAX_QUALITY = 100;
+    public const MIN_QUALITY = 0;
+    public const MAX_QUALITY = 100;
     protected array $options;
     private array $temporaryFiles = [];
     private array $inputs = [];
@@ -116,7 +116,7 @@ class Merger
             return $value >= self::MIN_QUALITY && $value <= self::MAX_QUALITY;
         });
 
-        $resolver->define('margin');
+        $resolver->setDefined('margin');
 
         $resolver->setDefault('margin', function (OptionsResolver $marginResolver) {
             $marginResolver->setDefaults([

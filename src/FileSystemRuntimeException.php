@@ -6,5 +6,4 @@ use RuntimeException;
 
 class FileSystemRuntimeException extends RuntimeException
 {
-
 }

@@ -4,12 +4,81 @@ on: [ push, pull_request ]
 
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php-version: '7.4'
+            job-description: 'with lowest deps'
+            composer-flags: '--prefer-stable --prefer-lowest' # should be checked on the lowest supported PHP version
 
+          - php-version: '7.4'
+            job-description: 'with Symfony ^5'
+            execute-flex-with-symfony-version: '^5' # explicit check for Symfony 5.x compatibility
+
+          - php-version: '8.0'
+            job-description: 'with Symfony ^6'
+            execute-flex-with-symfony-version: '^6' # explicit check for Symfony 6.x compatibility
+
+          - php-version: '8.1'
+            job-description: 'with calculating code coverage'
+            calculate-code-coverage: 'yes'
+            phpunit-flags: '--coverage-clover build/logs/clover.xml'
+
+          - php-version: '8.2'
+            PHP_CS_FIXER_IGNORE_ENV: 1
+            composer-flags: '--ignore-platform-req=PHP'
+
+    name: PHP ${{ matrix.php-version }} ${{ matrix.job-description }}
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+      - name: Get code coverage driver
+        uses: actions/github-script@v6
+        id: code-coverage-driver
+        with:
+          script: 'return "${{ matrix.calculate-code-coverage }}" == "yes" ? "pcov" : "none"'
+          result-encoding: string
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: ${{ steps.code-coverage-driver.outputs.result }}
+          tools: flex
+        env:
+          fail-fast: false # disabled as old PHP version cannot run flex
+          update: ${{ matrix.php-version == '8.0' }} # force update to 8.0.1+, ref https://github.com/shivammathur/setup-php/issues/394#issuecomment-760461251
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('**/composer.*') }}-${{ matrix.composer-flags }}
+          restore-keys: |
+            composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('**/composer.*') }}-
+            composer-${{ runner.os }}-${{ matrix.php-version }}-
+            composer-${{ runner.os }}-
+            composer-
+
+      - name: Configure Symfony Flex
+        if: matrix.execute-flex-with-symfony-version
+        run: composer config extra.symfony.require ${{ matrix.execute-flex-with-symfony-version }}
+
       - name: Install dependencies
-        run: composer install
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          retry_wait_seconds: 30
+          command: |
+            composer update --optimize-autoloader --no-interaction --no-progress ${{ matrix.composer-flags }}
+            composer info -D
+
       - name: Install dependencies
         run: |
           curl -L https://github.com/ajaxray/merge2pdf/releases/download/v1.1.0/merge2pdf_linux-amd64.OS -o /usr/local/bin/merge2pdf
@@ -17,10 +86,20 @@ jobs:
           curl -L https://github.com/php-coveralls/php-coveralls/releases/download/v2.4.3/php-coveralls.phar -o /usr/local/bin/php-coveralls
           chmod +x /usr/local/bin/php-coveralls
           mkdir -p build/logs
+
+      - name: Disable time limit for tests when collecting coverage
+        if: matrix.calculate-code-coverage == 'yes'
+        run: sed 's/enforceTimeLimit="true"/enforceTimeLimit="false"/g' phpunit.xml.dist > phpunit.xml
+
       - name: Run tests
-        run: XDEBUG_MODE=coverage vendor/bin/phpunit
+        env:
+          PHP_CS_FIXER_IGNORE_ENV: ${{ matrix.PHP_CS_FIXER_IGNORE_ENV }}
+          FAST_LINT_TEST_CASES: ${{ matrix.FAST_LINT_TEST_CASES }}
+        run: vendor/bin/phpunit ${{ matrix.phpunit-flags }}
+
       - name: Upload coverage results to Coveralls
+        if: matrix.calculate-code-coverage == 'yes'
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          php-coveralls --coverage_clover=build/logs/clover.xml -v
+        run: php-coveralls --coverage_clover=build/logs/clover.xml -v
+

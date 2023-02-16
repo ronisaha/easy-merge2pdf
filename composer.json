@@ -4,8 +4,8 @@
     "type": "library",
     "require": {
         "php" : ">=7.4",
-        "symfony/process": "^5.0",
-        "symfony/options-resolver": "^5.0",
+        "symfony/process": "^5.0|^6.0",
+        "symfony/options-resolver": "^5.0|^6.0",
         "ext-json": "*"
     },
     "require-dev": {
