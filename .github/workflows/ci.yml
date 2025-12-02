@@ -28,6 +28,15 @@ jobs:
           - php-version: '8.2'
             PHP_CS_FIXER_IGNORE_ENV: 1
             composer-flags: '--ignore-platform-req=PHP'
+          - php-version: '8.3'
+            PHP_CS_FIXER_IGNORE_ENV: 1
+            composer-flags: '--ignore-platform-req=PHP'
+          - php-version: '8.4'
+            PHP_CS_FIXER_IGNORE_ENV: 1
+            composer-flags: '--ignore-platform-req=PHP'
+          - php-version: '8.5'
+            PHP_CS_FIXER_IGNORE_ENV: 1
+            composer-flags: '--ignore-platform-req=PHP'
 
     name: PHP ${{ matrix.php-version }} ${{ matrix.job-description }}
     runs-on: ubuntu-20.04
