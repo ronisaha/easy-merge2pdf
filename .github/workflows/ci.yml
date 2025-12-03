@@ -39,7 +39,7 @@ jobs:
             composer-flags: '--ignore-platform-req=PHP'
 
     name: PHP ${{ matrix.php-version }} ${{ matrix.job-description }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
       - name: Get code coverage driver
