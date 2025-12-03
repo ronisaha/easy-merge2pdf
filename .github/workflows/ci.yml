@@ -16,18 +16,21 @@ jobs:
             job-description: 'with Symfony ^5'
             execute-flex-with-symfony-version: '^5' # explicit check for Symfony 5.x compatibility
 
-          - php-version: '8.0'
+          - php-version: '8.1'
             job-description: 'with Symfony ^6'
+            PHP_CS_FIXER_IGNORE_ENV: 1
             execute-flex-with-symfony-version: '^6' # explicit check for Symfony 6.x compatibility
+
+          - php-version: '8.2'
+            PHP_CS_FIXER_IGNORE_ENV: 1
+            job-description: 'with Symfony ^7'
+            execute-flex-with-symfony-version: '^7' # explicit check for Symfony 7.x compatibility            
 
           - php-version: '8.1'
             job-description: 'with calculating code coverage'
             calculate-code-coverage: 'yes'
             phpunit-flags: '--coverage-clover build/logs/clover.xml'
 
-          - php-version: '8.2'
-            PHP_CS_FIXER_IGNORE_ENV: 1
-            composer-flags: '--ignore-platform-req=PHP'
           - php-version: '8.3'
             PHP_CS_FIXER_IGNORE_ENV: 1
             composer-flags: '--ignore-platform-req=PHP'
